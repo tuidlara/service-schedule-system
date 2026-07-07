@@ -3,6 +3,7 @@ package com.arthur.sistema_agendamentos.service;
 import com.arthur.sistema_agendamentos.dto.AgendamentoRequestDTO;
 import com.arthur.sistema_agendamentos.dto.AgendamentoResponseDTO;
 import com.arthur.sistema_agendamentos.entity.Agendamento;
+import com.arthur.sistema_agendamentos.exception.HorarioIndisponivelException;
 import com.arthur.sistema_agendamentos.repository.AgendamentoRepository;
 import org.springframework.stereotype.Service;
 
@@ -28,9 +29,16 @@ public class AgendamentoService {
     }
 
     public AgendamentoResponseDTO criarAgendamento(Agendamento agendamento) {
-        Agendamento salvo = repository.save(agendamento);
-        return converterParaDTO(salvo);
-    }
+        if (repository.existsByDataAndHorario(
+                agendamento.getData(),
+                agendamento.getHorario())) {
+
+            throw new HorarioIndisponivelException();
+        }
+            Agendamento salvo = repository.save(agendamento);
+            return converterParaDTO(salvo);
+        }
+
 
     public List <AgendamentoResponseDTO> listarAgendamentos(){
        List<Agendamento> agendamentos = repository.findAll();
@@ -60,13 +68,21 @@ public class AgendamentoService {
         Agendamento agendamento = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Agendamento não encontrado"));
 
+        if (repository.existsByDataAndHorarioAndIdNot(
+                novoDto.getData(),
+                novoDto.getHorario(),
+                id)) {
+
+            throw new HorarioIndisponivelException();
+        }
         agendamento.setNomeCliente(novoDto.getNomeCliente());
         agendamento.setTelefone(novoDto.getTelefone());
         agendamento.setData(novoDto.getData());
         agendamento.setHorario(novoDto.getHorario());
 
+
         Agendamento atualizado = repository.save(agendamento);
         return converterParaDTO(atualizado);
+    }
 
     }
-}
