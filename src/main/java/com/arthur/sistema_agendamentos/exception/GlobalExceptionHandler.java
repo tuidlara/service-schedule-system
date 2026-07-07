@@ -46,7 +46,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HorarioIndisponivelException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     @ResponseBody
-    public Map<String, String> tratarHorarioIndisponivelException(HorarioIndisponivelException e){
+    public Map<String, String> tratarHorarioIndisponivelException(HorarioIndisponivelException e) {
 
         Map<String, String> erro = new HashMap<>();
         erro.put("erro", e.getMessage());

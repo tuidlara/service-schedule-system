@@ -13,26 +13,26 @@ import java.util.List;
 @RestController
 @RequestMapping("/agendamentos")
 public class AgendamentoController {
-private final AgendamentoService agendamentoService;
+    private final AgendamentoService agendamentoService;
 
-    public AgendamentoController (AgendamentoService agendamentoService) {
+    public AgendamentoController(AgendamentoService agendamentoService) {
         this.agendamentoService = agendamentoService;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public AgendamentoResponseDTO criarAgendamento(@Valid @RequestBody AgendamentoRequestDTO dto){
+    public AgendamentoResponseDTO criarAgendamento(@Valid @RequestBody AgendamentoRequestDTO dto) {
         Agendamento agendamento = new Agendamento(dto.getNomeCliente(), dto.getTelefone(), dto.getData(), dto.getHorario());
         return agendamentoService.criarAgendamento(agendamento);
     }
 
     @GetMapping
-    public List<AgendamentoResponseDTO> listarAgendamentos(){
+    public List<AgendamentoResponseDTO> listarAgendamentos() {
         return agendamentoService.listarAgendamentos();
     }
 
     @GetMapping("/{id}")
-    public AgendamentoResponseDTO buscarPorId(@PathVariable Long id){
+    public AgendamentoResponseDTO buscarPorId(@PathVariable Long id) {
         return agendamentoService.buscarAgendamento(id);
     }
 
@@ -40,12 +40,19 @@ private final AgendamentoService agendamentoService;
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletarPorId(@PathVariable Long id) {
         agendamentoService.deletarAgendamento(id);
+
     }
 
     @PutMapping("/{id}")
-    public AgendamentoResponseDTO atualizarAgendamento(@PathVariable Long id, @Valid @RequestBody AgendamentoRequestDTO novoDto){
+    public AgendamentoResponseDTO atualizarAgendamento(@PathVariable Long id, @Valid @RequestBody AgendamentoRequestDTO novoDto) {
         return agendamentoService.atualizarAgendamento(id, novoDto);
 
     }
+
+    @GetMapping("/telefone/{telefone}")
+    public List<AgendamentoResponseDTO> buscarPorTelefone(@PathVariable String telefone) {
+        return agendamentoService.buscarPorTelefone(telefone);
+    }
+
 }
 
