@@ -5,7 +5,7 @@ import com.arthur.sistema_agendamentos.dto.AgendamentoResponseDTO;
 import com.arthur.sistema_agendamentos.entity.Agendamento;
 import com.arthur.sistema_agendamentos.service.AgendamentoService;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,8 +27,11 @@ public class AgendamentoController {
     }
 
     @GetMapping
-    public List<AgendamentoResponseDTO> listarAgendamentos() {
-        return agendamentoService.listarAgendamentos();
+    public Page<AgendamentoResponseDTO> listarAgendamentosPaginados(
+            @RequestParam(defaultValue = "0") int pagina,
+            @RequestParam(defaultValue = "10") int tamanho) {
+
+        return agendamentoService.listarAgendamentosPaginados(pagina, tamanho);
     }
 
     @GetMapping("/{id}")

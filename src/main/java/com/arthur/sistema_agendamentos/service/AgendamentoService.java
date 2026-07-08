@@ -5,6 +5,10 @@ import com.arthur.sistema_agendamentos.dto.AgendamentoResponseDTO;
 import com.arthur.sistema_agendamentos.entity.Agendamento;
 import com.arthur.sistema_agendamentos.exception.HorarioIndisponivelException;
 import com.arthur.sistema_agendamentos.repository.AgendamentoRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -46,15 +50,13 @@ public class AgendamentoService {
     }
 
 
-    public List<AgendamentoResponseDTO> listarAgendamentos() {
-        List<Agendamento> agendamentos = repository.findAll();
-        List<AgendamentoResponseDTO> dtos = new ArrayList<>();
-        for (Agendamento agendamento : agendamentos) {
-            dtos.add(converterParaDTO(agendamento));
-        }
-
-        return dtos;
+    public Page<AgendamentoResponseDTO> listarAgendamentosPaginados(int pagina, int tamanho) {
+        Pageable pageable = PageRequest.of(pagina, tamanho, Sort.by("data", "horario").ascending());
+        Page<Agendamento> agendamentos = repository.findAll(pageable);
+        return agendamentos.map(this::converterParaDTO);
     }
+
+
 
     public AgendamentoResponseDTO buscarAgendamento(Long id) {
         Agendamento agendamento = repository.findById(id)
@@ -107,7 +109,7 @@ public class AgendamentoService {
         LocalTime fechamento = LocalTime.of(18, 0);
 
         if (horario.isBefore(abertura) || horario.isAfter(fechamento)) {
-            throw  new IllegalArgumentException("Horário de funcionamento é entre 8h e 18h");
+            throw  new IllegalArgumentException("Horário de funcionamento entre 8h e 18h");
         }
     }
 
