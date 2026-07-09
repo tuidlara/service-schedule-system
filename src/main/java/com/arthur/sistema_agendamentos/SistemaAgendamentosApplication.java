@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class SistemaAgendamentosApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(SistemaAgendamentosApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(SistemaAgendamentosApplication.class, args);
+    }
 
 }

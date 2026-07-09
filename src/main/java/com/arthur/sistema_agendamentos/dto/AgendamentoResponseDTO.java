@@ -10,6 +10,8 @@ public class AgendamentoResponseDTO {
     private String telefone;
     private LocalDate data;
     private LocalTime horario;
+    private Long tipoServicoId;
+    private String nomeTipoServico;
 
     public Long getId() {
         return id;
@@ -51,5 +53,20 @@ public class AgendamentoResponseDTO {
         this.horario = horario;
     }
 
+    public String getNomeTipoServico() {
+        return nomeTipoServico;
+    }
+
+    public void setNomeTipoServico(String nomeTipoServico) {
+        this.nomeTipoServico = nomeTipoServico;
+    }
+
+    public Long getTipoServicoId() {
+        return tipoServicoId;
+    }
+
+    public void setTipoServicoId(Long tipoServicoId) {
+        this.tipoServicoId = tipoServicoId;
+    }
 }
 

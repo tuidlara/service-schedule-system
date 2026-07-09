@@ -2,10 +2,10 @@ package com.arthur.sistema_agendamentos.controller;
 
 import com.arthur.sistema_agendamentos.dto.AgendamentoRequestDTO;
 import com.arthur.sistema_agendamentos.dto.AgendamentoResponseDTO;
-import com.arthur.sistema_agendamentos.entity.Agendamento;
 import com.arthur.sistema_agendamentos.service.AgendamentoService;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,8 +22,7 @@ public class AgendamentoController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public AgendamentoResponseDTO criarAgendamento(@Valid @RequestBody AgendamentoRequestDTO dto) {
-        Agendamento agendamento = new Agendamento(dto.getNomeCliente(), dto.getTelefone(), dto.getData(), dto.getHorario());
-        return agendamentoService.criarAgendamento(agendamento);
+        return agendamentoService.criarAgendamento(dto);
     }
 
     @GetMapping
@@ -56,6 +55,7 @@ public class AgendamentoController {
     public List<AgendamentoResponseDTO> buscarPorTelefone(@PathVariable String telefone) {
         return agendamentoService.buscarPorTelefone(telefone);
     }
+
 
 }
 

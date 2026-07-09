@@ -20,6 +20,8 @@ public class AgendamentoRequestDTO {
     @NotNull(message = "Horário não pode ser nulo.")
     private LocalTime horario;
 
+    private Long tipoServicoId;
+
     public String getNomeCliente() {
         return nomeCliente;
     }
@@ -50,5 +52,13 @@ public class AgendamentoRequestDTO {
 
     public void setHorario(LocalTime horario) {
         this.horario = horario;
+    }
+
+    public Long getTipoServicoId() {
+        return tipoServicoId;
+    }
+
+    public void setTipoServicoId(Long tipoServicoId) {
+        this.tipoServicoId = tipoServicoId;
     }
 }

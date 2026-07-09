@@ -1,9 +1,6 @@
 package com.arthur.sistema_agendamentos.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -20,11 +17,17 @@ public class Agendamento {
     private LocalDate data;
     private LocalTime horario;
 
-    public Agendamento(String nomeCliente, String telefone, LocalDate data, LocalTime horario) {
+    //muitos agendamentos pertencem a um tipoServico
+    @ManyToOne
+    @JoinColumn(name = "tipo_servico_id")
+    private TipoServico tipoServico;
+
+    public Agendamento(String nomeCliente, String telefone, LocalDate data, LocalTime horario, TipoServico tipoServico) {
         this.nomeCliente = nomeCliente;
         this.telefone = telefone;
         this.data = data;
         this.horario = horario;
+        this.tipoServico = tipoServico;
     }
 
     public Agendamento() {
@@ -71,4 +74,11 @@ public class Agendamento {
         this.horario = horario;
     }
 
+    public TipoServico getTipoServico() {
+        return tipoServico;
+    }
+
+    public void setTipoServico(TipoServico tipoServico) {
+        this.tipoServico = tipoServico;
+    }
 }
