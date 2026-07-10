@@ -17,7 +17,7 @@ public class Agendamento {
     private LocalDate data;
     private LocalTime horario;
 
-    //muitos agendamentos pertencem a um tipoServico
+    //Um serviço pode ser utilizado em vários agendamentos.
     @ManyToOne
     @JoinColumn(name = "tipo_servico_id")
     private TipoServico tipoServico;
