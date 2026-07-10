@@ -24,7 +24,7 @@ The project was developed to practice backend concepts such as REST APIs, layere
 
 ## 🛠️ Technologies
 
--  Java 21
+-  Java
 -  Spring Boot
 -  Spring Data JPA
 -  PostgreSQL
