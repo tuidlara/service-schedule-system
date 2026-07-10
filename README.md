@@ -80,4 +80,4 @@ src
 
 ## 👨‍💻 Author
 
-**Arthur de Lara**
+**Arthur de Lara Zilli**
