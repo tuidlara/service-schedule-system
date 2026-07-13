@@ -148,4 +148,29 @@ public class AgendamentoService {
         return dtos;
     }
 
+    public List<AgendamentoResponseDTO> buscarPorData(LocalDate data) {
+        List<Agendamento> agendamentos = repository.findByData(data);
+        List<AgendamentoResponseDTO> dtos = new ArrayList<>();
+        for (Agendamento agendamento : agendamentos) {
+            dtos.add(converterParaDTO(agendamento));
+
+        }
+        return dtos;
+    }
+
+    public List<AgendamentoResponseDTO> buscarPorPeriodo(LocalDate inicio, LocalDate fim) {
+        if(fim.isBefore(inicio)){
+            throw new IllegalArgumentException("O período informado é inválido");
+        }
+        List<Agendamento> agendamentos = repository.findByDataBetween(inicio, fim);
+        List<AgendamentoResponseDTO> dtos = new ArrayList<>();
+        for (Agendamento agendamento : agendamentos) {
+            dtos.add(converterParaDTO(agendamento));
+
+        }
+        return dtos;
+
+    }
 }
+
+

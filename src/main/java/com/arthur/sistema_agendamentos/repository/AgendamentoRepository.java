@@ -15,4 +15,8 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> 
 
     List<Agendamento> findByTelefone(String telefone);
 
+    List<Agendamento> findByData(LocalDate data);
+
+    List<Agendamento> findByDataBetween(LocalDate inicio, LocalDate fim);
+
 }

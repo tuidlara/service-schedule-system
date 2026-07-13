@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -56,6 +57,15 @@ public class AgendamentoController {
         return agendamentoService.buscarPorTelefone(telefone);
     }
 
+    @GetMapping("/data/{data}")
+    public List <AgendamentoResponseDTO> buscarPorData(@PathVariable LocalDate data) {
+        return agendamentoService.buscarPorData(data);
+    }
 
+    @GetMapping("/periodo")
+    public List <AgendamentoResponseDTO> buscarPorPeriodo(@RequestParam("inicio") LocalDate inicio,
+        @RequestParam("fim") LocalDate fim) {
+        return  agendamentoService.buscarPorPeriodo(inicio, fim);
+    }
 }
 
