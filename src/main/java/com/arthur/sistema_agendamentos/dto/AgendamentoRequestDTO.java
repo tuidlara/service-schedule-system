@@ -2,6 +2,7 @@ package com.arthur.sistema_agendamentos.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -11,7 +12,8 @@ public class AgendamentoRequestDTO {
     @NotBlank(message = "Nome não pode ser vazio.")
     private String nomeCliente;
 
-    @NotBlank(message = "Telefone não pode estar em vazio.")
+    @NotBlank(message = "Telefone não pode estar vazio.")
+    @Pattern(regexp = "^\\d{11}$", message = "Telefone deve conter 11 dígitos (DDD + número)")
     private String telefone;
 
     @NotNull(message = "Data não pode ser nula.")
