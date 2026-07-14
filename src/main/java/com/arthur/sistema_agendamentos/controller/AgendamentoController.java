@@ -65,7 +65,13 @@ public class AgendamentoController {
     @GetMapping("/periodo")
     public List <AgendamentoResponseDTO> buscarPorPeriodo(@RequestParam("inicio") LocalDate inicio,
         @RequestParam("fim") LocalDate fim) {
-        return  agendamentoService.buscarPorPeriodo(inicio, fim);
+        return agendamentoService.buscarPorPeriodo(inicio, fim);
     }
+
+    @GetMapping("/tipo/{id}")
+    public List <AgendamentoResponseDTO> buscarPorTipoServico(@PathVariable Long id){
+        return  agendamentoService.buscarPorTipoServico(id);
+    }
+
 }
 

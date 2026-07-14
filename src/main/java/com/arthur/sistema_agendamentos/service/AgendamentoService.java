@@ -171,6 +171,19 @@ public class AgendamentoService {
         return dtos;
 
     }
+
+    public List<AgendamentoResponseDTO> buscarPorTipoServico(Long id){
+        tipoServicoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Tipo de serviço não encontrado"));
+        List<Agendamento> agendamentos = repository.findByTipoServico_Id(id);
+        List<AgendamentoResponseDTO> dtos = new ArrayList<>();
+        for (Agendamento agendamento : agendamentos) {
+            dtos.add(converterParaDTO(agendamento));
+
+        }
+        return dtos;
+
+    }
 }
 
 

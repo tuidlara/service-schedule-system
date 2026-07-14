@@ -19,4 +19,7 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> 
 
     List<Agendamento> findByDataBetween(LocalDate inicio, LocalDate fim);
 
+    List<Agendamento> findByTipoServico_Id(Long id);
+
+    boolean existsByTipoServico_Id(Long id);
 }

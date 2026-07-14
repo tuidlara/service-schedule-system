@@ -3,6 +3,7 @@ package com.arthur.sistema_agendamentos.service;
 import com.arthur.sistema_agendamentos.dto.TipoServicoRequestDTO;
 import com.arthur.sistema_agendamentos.dto.TipoServicoResponseDTO;
 import com.arthur.sistema_agendamentos.entity.TipoServico;
+import com.arthur.sistema_agendamentos.repository.AgendamentoRepository;
 import com.arthur.sistema_agendamentos.repository.TipoServicoRepository;
 import org.springframework.stereotype.Service;
 
@@ -13,10 +14,11 @@ import java.util.List;
 public class TipoServicoService {
 
     private final TipoServicoRepository tipoServicoRepository;
+    private final AgendamentoRepository agendamentoRepository;
 
-    public TipoServicoService(TipoServicoRepository tipoServicoRepository) {
+    public TipoServicoService(TipoServicoRepository tipoServicoRepository, AgendamentoRepository repository) {
         this.tipoServicoRepository = tipoServicoRepository;
-
+        this.agendamentoRepository = repository;
     }
 
     private TipoServicoResponseDTO converterParaDTO(TipoServico tipoServico) {
@@ -56,6 +58,9 @@ public class TipoServicoService {
     public void deletarServico(Long id){
         TipoServico servico = tipoServicoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Serviço não encontrado"));
+        if(agendamentoRepository.existsByTipoServico_Id(id)){
+            throw new IllegalArgumentException("Você não pode deletar um serviço que está em uso");
+        }
         tipoServicoRepository.delete(servico);
     }
 
