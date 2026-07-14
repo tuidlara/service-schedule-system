@@ -4,7 +4,7 @@ import com.arthur.sistema_agendamentos.dto.AgendamentoRequestDTO;
 import com.arthur.sistema_agendamentos.dto.AgendamentoResponseDTO;
 import com.arthur.sistema_agendamentos.entity.Agendamento;
 import com.arthur.sistema_agendamentos.entity.TipoServico;
-import com.arthur.sistema_agendamentos.exception.HorarioIndisponivelException;
+import com.arthur.sistema_agendamentos.exception.*;
 import com.arthur.sistema_agendamentos.repository.AgendamentoRepository;
 import com.arthur.sistema_agendamentos.repository.TipoServicoRepository;
 import org.springframework.data.domain.Page;
@@ -55,7 +55,7 @@ public class AgendamentoService {
         }
 
         TipoServico tipoServico = tipoServicoRepository.findById(dto.getTipoServicoId())
-                .orElseThrow(() -> new IllegalArgumentException("Tipo de serviço não encontrado"));
+                .orElseThrow(TipoServicoNaoEncontradoException::new);
 
         Agendamento agendamento = new Agendamento(
                 dto.getNomeCliente(),
@@ -79,28 +79,26 @@ public class AgendamentoService {
 
     public AgendamentoResponseDTO buscarAgendamento(Long id) {
         Agendamento agendamento = repository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Agendamento não encontrado"));
+                .orElseThrow(AgendamentoNaoEncontradoException::new);
 
         return converterParaDTO(agendamento);
     }
 
     public void deletarAgendamento(Long id) {
         Agendamento agendamento = repository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Agendamento não encontrado"));
-
+                .orElseThrow(AgendamentoNaoEncontradoException::new);
         repository.delete(agendamento);
     }
 
     public AgendamentoResponseDTO atualizarAgendamento(Long id, AgendamentoRequestDTO novoDto) {
-        validarData(novoDto.getData());
-        validarHorario(novoDto.getHorario());
-
         Agendamento agendamento = repository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Agendamento não encontrado"));
-
+                .orElseThrow(AgendamentoNaoEncontradoException::new);
 
         TipoServico tipoServico = tipoServicoRepository.findById(novoDto.getTipoServicoId())
-                .orElseThrow(() -> new IllegalArgumentException("Tipo de serviço não encontrado"));
+                .orElseThrow(TipoServicoNaoEncontradoException::new);
+
+        validarData(novoDto.getData());
+        validarHorario(novoDto.getHorario());
 
         if (repository.existsByDataAndHorarioAndIdNot(
                 novoDto.getData(),
@@ -124,9 +122,8 @@ public class AgendamentoService {
         LocalDate hoje = LocalDate.now();
         if (data.isBefore(hoje)) {
 
-            throw new IllegalArgumentException("Essa data não está mais disponível");
+            throw new DataInvalidaException();
         }
-
     }
 
     private void validarHorario(LocalTime horario) {
@@ -134,7 +131,7 @@ public class AgendamentoService {
         LocalTime fechamento = LocalTime.of(18, 0);
 
         if (horario.isBefore(abertura) || horario.isAfter(fechamento)) {
-            throw new IllegalArgumentException("Horário de funcionamento entre 8h e 18h");
+            throw new HorarioFuncionamentoException();
         }
     }
 
@@ -159,8 +156,8 @@ public class AgendamentoService {
     }
 
     public List<AgendamentoResponseDTO> buscarPorPeriodo(LocalDate inicio, LocalDate fim) {
-        if(fim.isBefore(inicio)){
-            throw new IllegalArgumentException("O período informado é inválido");
+        if (fim.isBefore(inicio)) {
+            throw new PeriodoInvalidoException();
         }
         List<Agendamento> agendamentos = repository.findByDataBetween(inicio, fim);
         List<AgendamentoResponseDTO> dtos = new ArrayList<>();
@@ -172,9 +169,9 @@ public class AgendamentoService {
 
     }
 
-    public List<AgendamentoResponseDTO> buscarPorTipoServico(Long id){
+    public List<AgendamentoResponseDTO> buscarPorTipoServico(Long id) {
         tipoServicoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Tipo de serviço não encontrado"));
+                .orElseThrow(TipoServicoNaoEncontradoException::new);
         List<Agendamento> agendamentos = repository.findByTipoServico_Id(id);
         List<AgendamentoResponseDTO> dtos = new ArrayList<>();
         for (Agendamento agendamento : agendamentos) {

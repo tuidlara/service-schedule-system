@@ -3,6 +3,9 @@ package com.arthur.sistema_agendamentos.service;
 import com.arthur.sistema_agendamentos.dto.TipoServicoRequestDTO;
 import com.arthur.sistema_agendamentos.dto.TipoServicoResponseDTO;
 import com.arthur.sistema_agendamentos.entity.TipoServico;
+import com.arthur.sistema_agendamentos.exception.TipoServicoDuplicadoException;
+import com.arthur.sistema_agendamentos.exception.TipoServicoEmUsoException;
+import com.arthur.sistema_agendamentos.exception.TipoServicoNaoEncontradoException;
 import com.arthur.sistema_agendamentos.repository.AgendamentoRepository;
 import com.arthur.sistema_agendamentos.repository.TipoServicoRepository;
 import org.springframework.stereotype.Service;
@@ -16,9 +19,9 @@ public class TipoServicoService {
     private final TipoServicoRepository tipoServicoRepository;
     private final AgendamentoRepository agendamentoRepository;
 
-    public TipoServicoService(TipoServicoRepository tipoServicoRepository, AgendamentoRepository repository) {
+    public TipoServicoService(TipoServicoRepository tipoServicoRepository, AgendamentoRepository agendamentoRepository) {
         this.tipoServicoRepository = tipoServicoRepository;
-        this.agendamentoRepository = repository;
+        this.agendamentoRepository = agendamentoRepository;
     }
 
     private TipoServicoResponseDTO converterParaDTO(TipoServico tipoServico) {
@@ -32,7 +35,7 @@ public class TipoServicoService {
 
     public TipoServicoResponseDTO criarTipoServico(TipoServicoRequestDTO dto) {
         if (tipoServicoRepository.existsByNomeIgnoreCase(dto.getNome())) {
-            throw new IllegalArgumentException("Já existe um tipo de serviço com esse nome");
+            throw new TipoServicoDuplicadoException();
         }
         TipoServico tipoServico = new TipoServico(
                 dto.getNome(),
@@ -54,15 +57,15 @@ public class TipoServicoService {
 
     public TipoServicoResponseDTO buscarServicoPorId(Long id) {
         TipoServico tipoServico = tipoServicoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Serviço não encontrado"));
+                .orElseThrow(TipoServicoNaoEncontradoException::new);
         return converterParaDTO(tipoServico);
     }
 
     public void deletarServico(Long id) {
         TipoServico servico = tipoServicoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Serviço não encontrado"));
+                .orElseThrow(TipoServicoNaoEncontradoException::new);
         if (agendamentoRepository.existsByTipoServico_Id(id)) {
-            throw new IllegalArgumentException("Você não pode deletar um serviço que está em uso");
+            throw new TipoServicoEmUsoException();
         }
         tipoServicoRepository.delete(servico);
     }
@@ -70,10 +73,10 @@ public class TipoServicoService {
     public TipoServicoResponseDTO atualizarServico(Long id, TipoServicoRequestDTO novoDto) {
 
         TipoServico tipoServico = tipoServicoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Serviço não encontrado"));
+                .orElseThrow(TipoServicoNaoEncontradoException::new);
 
         if (tipoServicoRepository.existsByNomeIgnoreCaseAndIdNot(novoDto.getNome(), id)) {
-            throw new IllegalArgumentException("Já existe um tipo de serviço com esse nome");
+            throw new TipoServicoDuplicadoException();
         }
 
         tipoServico.setNome(novoDto.getNome());

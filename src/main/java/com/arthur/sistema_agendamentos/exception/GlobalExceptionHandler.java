@@ -3,53 +3,60 @@ package com.arthur.sistema_agendamentos.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@ControllerAdvice
+//elimina necessidade do @ResponseBody
+@RestControllerAdvice
 public class GlobalExceptionHandler {
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ResponseBody
-
-    public Map<String, String> tratarIllegalArgumentException(IllegalArgumentException e) {
-
-        Map<String, String> erro = new HashMap<>();
-
-        erro.put("erro", e.getMessage());
-        return erro;
-
-    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
     public Map<String, String> tratarMethodArgumentNotValid(MethodArgumentNotValidException e) {
 
-        Map<String, String> erro = new HashMap<>();
-
-        //// pega o primeiro erro de validação encontrado
+        //pega o primeiro erro de validação encontrado
         FieldError campoErro = e.getBindingResult().getFieldError();
         if (campoErro != null) {
-            erro.put("erro", campoErro.getDefaultMessage());
+            return criarErro(campoErro.getDefaultMessage());
         }
-
-        return erro;
+        return criarErro("Erro de validação.");
     }
 
-    @ExceptionHandler(HorarioIndisponivelException.class)
+    @ExceptionHandler({
+            HorarioIndisponivelException.class,
+            TipoServicoDuplicadoException.class,
+            TipoServicoEmUsoException.class
+    })
     @ResponseStatus(HttpStatus.CONFLICT)
-    @ResponseBody
-    public Map<String, String> tratarHorarioIndisponivelException(HorarioIndisponivelException e) {
+    public Map<String, String> tratarConflitos(RuntimeException e) {
+        return criarErro(e.getMessage());
+    }
 
+    @ExceptionHandler({
+            TipoServicoNaoEncontradoException.class,
+            AgendamentoNaoEncontradoException.class
+    })
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> tratarNotFound(RuntimeException e) {
+        return criarErro(e.getMessage());
+
+    }
+
+    @ExceptionHandler({
+            DataInvalidaException.class,
+            HorarioFuncionamentoException.class,
+            PeriodoInvalidoException.class
+    })
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> tratarBadRequest(RuntimeException e) {
+        return criarErro(e.getMessage());
+    }
+
+    private Map<String, String> criarErro(String mensagem) {
         Map<String, String> erro = new HashMap<>();
-        erro.put("erro", e.getMessage());
+        erro.put("erro", mensagem);
         return erro;
     }
 
