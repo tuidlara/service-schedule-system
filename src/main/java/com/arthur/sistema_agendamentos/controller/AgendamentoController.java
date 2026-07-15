@@ -68,9 +68,9 @@ public class AgendamentoController {
         return agendamentoService.buscarPorPeriodo(inicio, fim);
     }
 
-    @GetMapping("/tipo/{id}")
-    public List <AgendamentoResponseDTO> buscarPorTipoServico(@PathVariable Long id){
-        return  agendamentoService.buscarPorTipoServico(id);
+    @GetMapping("/tipos-servico/{id}")
+    public List <AgendamentoResponseDTO> listarPorTipoServico(@PathVariable Long id){
+        return  agendamentoService.listarPorTipoServico(id);
     }
 
 }

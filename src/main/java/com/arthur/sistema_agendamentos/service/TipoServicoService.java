@@ -82,4 +82,11 @@ public class TipoServicoService {
         return converterParaDTO(atualizado);
     }
 
+    public List <TipoServicoResponseDTO> buscarPorNome(String nome) {
+        List <TipoServico> servicos = tipoServicoRepository.findByNomeContainingIgnoreCase(nome);
+        return servicos.stream()
+                .map(this::converterParaDTO)
+                .toList();
+    }
+
 }

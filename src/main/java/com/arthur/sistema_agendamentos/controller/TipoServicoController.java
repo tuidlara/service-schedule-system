@@ -45,4 +45,9 @@ public class TipoServicoController {
     public TipoServicoResponseDTO atualizarServico(@PathVariable Long id, @Valid @RequestBody TipoServicoRequestDTO novoDto){
         return tipoServicoService.atualizarServico(id, novoDto);
     }
+
+    @GetMapping("/buscar")
+    public List <TipoServicoResponseDTO> buscarPorNome(@RequestParam("nome") String nome){
+        return tipoServicoService.buscarPorNome(nome);
+    }
 }

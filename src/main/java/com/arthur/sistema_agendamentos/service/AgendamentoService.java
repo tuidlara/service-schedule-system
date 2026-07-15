@@ -159,7 +159,7 @@ public class AgendamentoService {
 
     }
 
-    public List<AgendamentoResponseDTO> buscarPorTipoServico(Long id) {
+    public List<AgendamentoResponseDTO> listarPorTipoServico(Long id) {
         tipoServicoRepository.findById(id)
                 .orElseThrow(TipoServicoNaoEncontradoException::new);
         List<Agendamento> agendamentos = repository.findByTipoServico_Id(id);
