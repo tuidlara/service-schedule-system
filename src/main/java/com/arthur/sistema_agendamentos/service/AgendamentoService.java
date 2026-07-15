@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -137,22 +136,16 @@ public class AgendamentoService {
 
     public List<AgendamentoResponseDTO> buscarPorTelefone(String telefone) {
         List<Agendamento> agendamentos = repository.findByTelefone(telefone);
-        List<AgendamentoResponseDTO> dtos = new ArrayList<>();
-        for (Agendamento agendamento : agendamentos) {
-            dtos.add(converterParaDTO(agendamento));
-
-        }
-        return dtos;
+        return agendamentos.stream()
+                .map(this::converterParaDTO)
+                .toList();
     }
 
     public List<AgendamentoResponseDTO> buscarPorData(LocalDate data) {
         List<Agendamento> agendamentos = repository.findByData(data);
-        List<AgendamentoResponseDTO> dtos = new ArrayList<>();
-        for (Agendamento agendamento : agendamentos) {
-            dtos.add(converterParaDTO(agendamento));
-
-        }
-        return dtos;
+        return agendamentos.stream()
+                .map(this::converterParaDTO)
+                .toList();
     }
 
     public List<AgendamentoResponseDTO> buscarPorPeriodo(LocalDate inicio, LocalDate fim) {
@@ -160,12 +153,9 @@ public class AgendamentoService {
             throw new PeriodoInvalidoException();
         }
         List<Agendamento> agendamentos = repository.findByDataBetween(inicio, fim);
-        List<AgendamentoResponseDTO> dtos = new ArrayList<>();
-        for (Agendamento agendamento : agendamentos) {
-            dtos.add(converterParaDTO(agendamento));
-
-        }
-        return dtos;
+        return agendamentos.stream()
+                .map(this::converterParaDTO)
+                .toList();
 
     }
 
@@ -173,12 +163,9 @@ public class AgendamentoService {
         tipoServicoRepository.findById(id)
                 .orElseThrow(TipoServicoNaoEncontradoException::new);
         List<Agendamento> agendamentos = repository.findByTipoServico_Id(id);
-        List<AgendamentoResponseDTO> dtos = new ArrayList<>();
-        for (Agendamento agendamento : agendamentos) {
-            dtos.add(converterParaDTO(agendamento));
-
-        }
-        return dtos;
+        return agendamentos.stream()
+                .map(this::converterParaDTO)
+                .toList();
 
     }
 }

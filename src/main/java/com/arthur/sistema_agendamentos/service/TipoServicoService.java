@@ -10,7 +10,6 @@ import com.arthur.sistema_agendamentos.repository.AgendamentoRepository;
 import com.arthur.sistema_agendamentos.repository.TipoServicoRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -46,13 +45,10 @@ public class TipoServicoService {
     }
 
     public List<TipoServicoResponseDTO> listarServicos() {
-        List<TipoServico> listarServicos = tipoServicoRepository.findAll();
-        List<TipoServicoResponseDTO> dtos = new ArrayList<>();
-
-        for (TipoServico t : listarServicos) {
-            dtos.add(converterParaDTO(t));
-        }
-        return dtos;
+        List<TipoServico> servicos = tipoServicoRepository.findAll();
+        return servicos.stream()
+                .map(this::converterParaDTO)
+                .toList();
     }
 
     public TipoServicoResponseDTO buscarServicoPorId(Long id) {
