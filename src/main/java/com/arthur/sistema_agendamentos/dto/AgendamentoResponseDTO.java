@@ -1,16 +1,31 @@
 package com.arthur.sistema_agendamentos.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class AgendamentoResponseDTO {
 
+    @Schema(description = "Identificador do agendamento", example = "1")
     private Long id;
+
+    @Schema(description = "Nome do cliente", example = "Arthur de Lara Zilli")
     private String nomeCliente;
+
+    @Schema(description = "Telefone do cliente", example = "46999999999")
     private String telefone;
+
+    @Schema(description = "Data do agendamento (AAAA-MM-DD)", example = "2026-07-16")
     private LocalDate data;
+
+    @Schema(description = "Horário do agendamento (HH:mm)", example = "13:50")
     private LocalTime horario;
+
+    @Schema(description = "ID do tipo de serviço", example = "1")
     private Long tipoServicoId;
+
+    @Schema(description = "Nome do tipo de serviço", example = "Corte Masculino")
     private String nomeTipoServico;
 
     public Long getId() {
